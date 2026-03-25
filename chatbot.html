@@ -1,0 +1,667 @@
+<!-- chatbot.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6c63ff">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="P-Search AI">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512x512.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css?v==2">
+    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="image.css">
+    <link rel="stylesheet" href="temp-chat.css">
+    <link rel="stylesheet" href="library.css">
+    <link rel="stylesheet" href="voice.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <title>P-Search AI — Chat</title>
+
+    <style>
+        /* ── Auth Loading Screen ─────────────────── */
+        #auth-loading-screen {
+            position: fixed;
+            inset: 0;
+            background: #111111;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            z-index: 999999;
+            transition: opacity 0.4s ease;
+        }
+
+        #auth-loading-screen.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .auth-load-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #6c63ff, #a78bfa);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            animation: loadPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes loadPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(108, 99, 255, 0.5);
+            }
+
+            50% {
+                box-shadow: 0 0 0 16px rgba(108, 99, 255, 0);
+            }
+        }
+
+        .auth-load-spinner {
+            width: 32px;
+            height: 32px;
+            border: 2px solid rgba(108, 99, 255, 0.2);
+            border-top-color: #6c63ff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .auth-load-text {
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* ── Mobile Sidebar Overlay ── */
+        #sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9998;
+        }
+
+        #sidebar-overlay.show {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ── Auth guard loading screen ── -->
+    <div id="auth-loading-screen">
+        <div class="auth-load-icon">❄</div>
+        <div class="auth-load-spinner"></div>
+        <div class="auth-load-text">Loading P-Search AI…</div>
+    </div>
+
+    <!-- ── Mobile sidebar backdrop ── -->
+    <div id="sidebar-overlay"></div>
+
+    <!-- ── MAIN APP ── -->
+    <div id="app-wrapper" style="display:none; width:100%; min-height:100vh; display:none;">
+
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-snowflake" id="logo"></i>
+                </div>
+                <button class="sidebarBtn" title="sidebar Close">
+                    <svg id="sidebar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="50%"
+                        height="50%" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round">
+                        <rect x="2" y="3" width="20" height="18" rx="2" />
+                        <line x1="9" y1="3" x2="9" y2="21" />
+                        <line x1="13" y1="8" x2="19" y2="8" />
+                        <line x1="13" y1="12" x2="19" y2="12" />
+                        <line x1="13" y1="16" x2="19" y2="16" />
+                    </svg>
+
+
+
+                </button>
+            </div>
+            <div class="aside">
+                <div class="box newchatadd" title="New chats"> <i class="fas fa-comment-medical icon"> </i> <span
+                        class="text">New chats</span></div>
+                <div class="box" title="Search chats"><i class="fa-solid fa-magnifying-glass icon"></i> <span
+                        class="text">Search chats</span></div>
+                <div class="search-box" style="display:none;">
+                    <input type="text" id="chatSearchInput" placeholder="Search chats..." />
+                </div>
+                <div class="box" title="Library"> <i class="fas fa-image icon"></i> <span class="text">Library</span>
+                </div>
+                <div class="box" title="Projects"> <i class="fas fa-list-check icon"></i> <span
+                        class="text">projects</span></div>
+            </div>
+            <div class="your-chats-btn">
+                <h2>Your chats</h2>
+                <button class="hideChat-hisBtn hidechtbtn"> <i class="fa-solid fa-angle-right"></i></button>
+                <button class="ShowChat-hisBtn hidechtbtn arrow-icon text"> <i
+                        class="fa-solid fa-angle-down"></i></button>
+            </div>
+            <div class="history"></div>
+            <div>
+                <div class="sidebar-footer">
+                    <div class="profile" id="profile-trigger">
+                        <div class="profile-icon" id="sidebar-profile-icon">
+                            <img id="sidebar-profile-img" src="" alt="Profile"
+                                style="display:none; width:100%; height:100%; border-radius:50%; object-fit:cover;">
+                            <i class="fa-solid fa-user" id="sidebar-profile-placeholder"></i>
+                        </div>
+                        <div class="profile-info">
+                            <div class="profile-name">
+                                <h2 id="sidebar-username">Loading…</h2>
+                            </div>
+                            <div class="profile-plan">Free Plan</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-container">
+            <div class="chat-container-header">
+                <div class="barBtn-appname">
+                    <button class="barBtn" title="sidebar Open">
+                        <svg id="sidebar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="50%"
+                            height="50%" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round">
+                            <rect x="2" y="3" width="20" height="18" rx="2" />
+                            <line x1="9" y1="3" x2="9" y2="21" />
+                            <line x1="13" y1="8" x2="19" y2="8" />
+                            <line x1="13" y1="12" x2="19" y2="12" />
+                            <line x1="13" y1="16" x2="19" y2="16" />
+                        </svg>
+
+
+                    </button>
+                    <div class="Appname">
+                        <h2 id="current-model-name">P-Search AI</h2>
+                        <i class="fa-solid fa-angle-down"></i>
+                        <div class="model-dropdown hidden">
+                            <div class="model-item" data-model="default">
+                                <i class="fa-solid fa-robot"></i>
+                                <div>
+                                    <h4>P-Search AI</h4>
+                                    <p>Default assistant</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-options">
+                    <button class="temp-chat-btn btn" title="Turn on Temporary Chat">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </button>
+                </div>
+                <div class="active-chat-options">
+                    <div class="three-dots-wrapper">
+                        <button class="three-dots">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-container-body">
+                <div class="message"></div>
+                <div class="wecome-message">
+                    <h2>What's on the agenda today?</h2>
+                </div>
+            </div>
+
+            <div class="file-preview-bar"></div>
+
+            <div class="chat-container-footer">
+                <div class="input-field">
+                    <button class="add-btn btn" title="Add file">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                    <div class="add-dropdown hidden">
+                        <div class="add-item" data-action="file">
+                            <i class="fa-solid fa-paperclip"></i> Upload File
+                        </div>
+                    </div>
+                    <input type="file" id="fileInput" multiple hidden>
+                    <textarea id="inputText" rows="1" placeholder="Type your message..."></textarea>
+                    <button class="mic-btn chat-micBtn btn" title="Dictate">
+                        <i class="fa-solid fa-microphone"></i>
+                    </button>
+                    <button class="send-btn" title="Send message">
+                        <i class="fa-solid fa-arrow-up"></i>
+                    </button>
+                    <button class="cancel-btn btn" title="Cancel response" style="display:none;">
+                        <i class="fa-solid fa-stop"></i>
+                    </button>
+                    <button class="waveform-btn" title="Voice mode"><i class="bi bi-soundwave"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROFILE PAGE -->
+        <div class="profile-page hidden">
+            <div class="profile-header">
+                <button class="back-to-chats-btn">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Back to Chats</span>
+                </button>
+                <h1>Profile Settings</h1>
+            </div>
+            <div class="profile-content">
+
+                <div class="profile-section profile-picture-section">
+                    <div class="profile-avatar-container">
+                        <div class="profile-avatar-display">
+                            <img id="profile-avatar-img" src="" alt="Profile" style="display:none;">
+                            <i class="fa-solid fa-user" id="profile-avatar-icon"></i>
+                        </div>
+                        <button class="edit-avatar-btn"><i class="fa-solid fa-camera"></i></button>
+                        <input type="file" id="avatar-upload" accept="image/*" hidden>
+                    </div>
+                    <button class="remove-avatar-btn" id="remove-avatar-btn" style="display:none;">Remove
+                        Picture</button>
+                </div>
+
+                <div class="profile-section">
+                    <h2><i class="fa-solid fa-user-circle"></i> Personal Information</h2>
+                    <div class="profile-field">
+                        <label>Username</label>
+                        <div class="field-input-group">
+                            <input type="text" id="username-input" value="" title="username" disabled>
+                            <button class="edit-field-btn" data-field="username"><i
+                                    class="fa-solid fa-pen"></i></button>
+                        </div>
+                    </div>
+                    <div class="profile-field">
+                        <label>Email</label>
+                        <div class="field-input-group">
+                            <input type="email" id="email-input" value="" title="email" disabled>
+                            <button class="edit-field-btn" data-field="email"><i class="fa-solid fa-pen"></i></button>
+                        </div>
+                    </div>
+                    <div class="profile-field">
+                        <label>Phone Number</label>
+                        <div class="field-input-group">
+                            <input type="tel" id="phone-input" value="" title="phone number" disabled>
+                            <button class="edit-field-btn" data-field="phone"><i class="fa-solid fa-pen"></i></button>
+                        </div>
+                    </div>
+                    <div class="profile-field">
+                        <label>Bio</label>
+                        <div class="field-input-group">
+                            <textarea id="bio-input" disabled rows="3"
+                                placeholder="Tell us about yourself..."></textarea>
+                            <button class="edit-field-btn" data-field="bio"><i class="fa-solid fa-pen"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-section storage-section">
+                    <h2><i class="fa-solid fa-database"></i> Storage Management</h2>
+                    <div class="storage-overview">
+                        <div class="storage-bar-container">
+                            <div class="storage-bar">
+                                <div class="storage-bar-fill" id="storage-bar-fill"></div>
+                            </div>
+                            <div class="storage-info">
+                                <span id="storage-used">0 KB</span> / <span id="storage-total">5 MB</span>
+                                <span class="storage-percentage" id="storage-percentage">0%</span>
+                            </div>
+                        </div>
+                        <div class="storage-breakdown">
+                            <div class="storage-item">
+                                <i class="fa-solid fa-comments"></i>
+                                <span>Chats</span>
+                                <span class="storage-size" id="chats-size">0 KB</span>
+                            </div>
+                            <div class="storage-item">
+                                <i class="fa-solid fa-microphone"></i>
+                                <span>Voice Messages</span>
+                                <span class="storage-size" id="voice-size">0 KB</span>
+                            </div>
+                            <div class="storage-item">
+                                <i class="fa-solid fa-image"></i>
+                                <span>Images</span>
+                                <span class="storage-size" id="images-size">0 KB</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="clear-storage-btn" id="clear-all-chats-btn">
+                        <i class="fa-solid fa-trash-can"></i> Clear All Chats
+                    </button>
+                    <button class="clear-storage-btn secondary" id="clear-voice-messages-btn">
+                        <i class="fa-solid fa-microphone-slash"></i> Clear Voice Messages
+                    </button>
+                </div>
+
+                <div class="profile-section">
+                    <h2><i class="fa-solid fa-palette"></i> Appearance</h2>
+                    <div class="profile-field">
+                        <label>Theme Mode</label>
+                        <div class="theme-toggle">
+                            <button class="theme-option active" data-theme="dark"><i
+                                    class="fa-solid fa-moon"></i><span>Dark</span></button>
+                            <button class="theme-option" data-theme="light"><i
+                                    class="fa-solid fa-sun"></i><span>Light</span></button>
+                            <button class="theme-option" data-theme="auto"><i
+                                    class="fa-solid fa-circle-half-stroke"></i><span>Auto</span></button>
+                        </div>
+                    </div>
+                    <div class="profile-field">
+                        <label>Font Size</label>
+                        <div class="font-size-control">
+                            <button class="font-size-btn" data-size="small">A</button>
+                            <button class="font-size-btn active" data-size="medium">A</button>
+                            <button class="font-size-btn" data-size="large">A</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <h2><i class="fa-solid fa-bell"></i> Notifications</h2>
+                    <div class="toggle-field">
+                        <div class="toggle-label"><span>Message Notifications</span>
+                            <p>Get notified for new messages</p>
+                        </div>
+                        <label class="toggle-switch"><input type="checkbox" id="msg-notifications" checked><span
+                                class="toggle-slider"></span></label>
+                    </div>
+                    <div class="toggle-field">
+                        <div class="toggle-label"><span>Sound Effects</span>
+                            <p>Play sounds for actions</p>
+                        </div>
+                        <label class="toggle-switch"><input type="checkbox" id="sound-effects" checked><span
+                                class="toggle-slider"></span></label>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <h2><i class="fa-solid fa-shield-halved"></i> Privacy & Security</h2>
+                    <div class="toggle-field">
+                        <div class="toggle-label"><span>Save Chat History</span>
+                            <p>Store conversations locally</p>
+                        </div>
+                        <label class="toggle-switch"><input type="checkbox" id="save-history" checked><span
+                                class="toggle-slider"></span></label>
+                    </div>
+                    <button class="danger-btn" id="export-data-btn">
+                        <i class="fa-solid fa-download"></i> Export My Data
+                    </button>
+                </div>
+
+                <div class="profile-section">
+                    <h2><i class="fa-solid fa-gear"></i> Account</h2>
+                    <button class="logout-btn" id="firebase-logout-btn">
+                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                    </button>
+                    <button class="danger-btn" id="delete-account-btn">
+                        <i class="fa-solid fa-user-xmark"></i> Delete Account
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="popup-container"></div>
+
+        <div id="modal-overlay" class="modal-hidden">
+            <div class="modal-box">
+                <h3 id="modal-title">Confirm</h3>
+                <p id="modal-message"></p>
+                <div class="modal-actions">
+                    <button id="modal-no" class="btn-no">No</button>
+                    <button id="modal-yes" class="btn-yes">Yes</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="rename-modal" class="modal-hidden">
+            <div class="modal-box">
+                <h3>Rename Chat</h3>
+                <input type="text" id="rename-input" placeholder="Enter new chat name" />
+                <div class="modal-actions">
+                    <button id="rename-cancel" class="btn-no">Cancel</button>
+                    <button id="rename-ok" class="btn-yes">OK</button>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- end #app-wrapper -->
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import {
+            getAuth,
+            onAuthStateChanged,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import {
+            getFirestore,
+            doc,
+            getDoc,
+            setDoc,
+            updateDoc,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB-7Sl0_Yf50ipd_XS85eF-F-0Fc_o6Cr4",
+            authDomain: "p-search-ai.firebaseapp.com",
+            projectId: "p-search-ai",
+            storageBucket: "p-search-ai.firebasestorage.app",
+            messagingSenderId: "511596771451",
+            appId: "1:511596771451:web:bca02c28259967b8de8ade"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window.__firebaseSignOut = () => signOut(auth);
+        window.__firebaseDb = db;
+        window.__firebaseDoc = doc;
+        window.__firebaseUpdateDoc = updateDoc;
+        window.__firebaseGetDoc = getDoc;
+        window.__firebaseServerTimestamp = serverTimestamp;
+        window.__firebaseCurrentUser = null;
+
+        const loadingScreen = document.getElementById("auth-loading-screen");
+        const appWrapper = document.getElementById("app-wrapper");
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                // ── Updated: redirect to auth.html (unchanged) ──
+                window.location.replace("auth.html");
+                return;
+            }
+
+            window.__firebaseCurrentUser = user;
+
+            try {
+                const userRef = doc(db, "users", user.uid);
+                const userSnap = await getDoc(userRef);
+
+                let userData = {};
+                if (userSnap.exists()) {
+                    userData = userSnap.data();
+                } else {
+                    userData = {
+                        uid: user.uid,
+                        name: user.displayName || user.email.split("@")[0] || "User",
+                        email: user.email || "",
+                        photo: user.photoURL || "",
+                        plan: "Free Plan",
+                        bio: "",
+                        createdAt: serverTimestamp()
+                    };
+                    await setDoc(userRef, userData);
+                }
+
+                const existing = JSON.parse(localStorage.getItem("userProfile")) || {};
+                const merged = {
+                    ...existing,
+                    uid: user.uid,
+                    username: userData.name || existing.username || "User",
+                    email: userData.email || existing.email || user.email || "",
+                    bio: userData.bio || existing.bio || "",
+                    phone: existing.phone || "",
+                    theme: existing.theme || "dark",
+                    fontSize: existing.fontSize || "medium",
+                    avatar: existing.avatar || userData.photo || null,
+                };
+                localStorage.setItem("userProfile", JSON.stringify(merged));
+                window.__currentUserData = merged;
+
+                const nameEl = document.getElementById("sidebar-username");
+                if (nameEl) nameEl.textContent = merged.username;
+
+                const img = document.getElementById("sidebar-profile-img");
+                const icon = document.getElementById("sidebar-profile-placeholder");
+                if (merged.avatar) {
+                    if (img) { img.src = merged.avatar; img.style.display = "block"; }
+                    if (icon) icon.style.display = "none";
+                } else {
+                    if (img) img.style.display = "none";
+                    if (icon) icon.style.display = "block";
+                }
+
+            } catch (err) {
+                console.warn("Firestore read failed, using auth data:", err);
+                const fallback = {
+                    uid: user.uid,
+                    username: user.displayName || "User",
+                    email: user.email || "",
+                    avatar: user.photoURL || null
+                };
+                localStorage.setItem("userProfile", JSON.stringify(fallback));
+                window.__currentUserData = fallback;
+
+                const nameEl = document.getElementById("sidebar-username");
+                if (nameEl) nameEl.textContent = fallback.username;
+            }
+
+            loadingScreen.classList.add("hide");
+            appWrapper.style.display = "flex";
+            setTimeout(() => loadingScreen.remove(), 450);
+
+            // MongoDB Migration
+            if (window.API) {
+                window.API.migrateFromLocalStorage();
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const logoutBtn = document.getElementById("firebase-logout-btn");
+            if (logoutBtn) {
+                logoutBtn.addEventListener("click", async () => {
+                    if (!confirm("Logout from P-Search AI?")) return;
+                    try {
+                        await signOut(auth);
+                        localStorage.removeItem("activeChatId");
+                        window.location.replace("auth.html");
+                    } catch (err) {
+                        console.error("Logout error:", err);
+                        alert("Logout failed. Please try again.");
+                    }
+                });
+            }
+
+            const editBtns = document.querySelectorAll(".edit-field-btn");
+            editBtns.forEach(btn => {
+                btn.addEventListener("click", async () => {
+                    const field = btn.dataset.field;
+                    const input = document.getElementById(`${field}-input`);
+                    if (!input || input.disabled) return;
+
+                    setTimeout(async () => {
+                        const val = input.value.trim();
+                        if (!val || !window.__firebaseCurrentUser) return;
+
+                        const firestoreKey = field === "username" ? "name" : field;
+                        const update = { [firestoreKey]: val };
+
+                        try {
+                            const userRef = doc(db, "users", window.__firebaseCurrentUser.uid);
+                            await updateDoc(userRef, { ...update, updatedAt: serverTimestamp() });
+
+                            const profile = JSON.parse(localStorage.getItem("userProfile")) || {};
+                            profile[field] = val;
+                            if (field === "username") {
+                                const nameEl = document.getElementById("sidebar-username");
+                                if (nameEl) nameEl.textContent = val;
+                            }
+                            localStorage.setItem("userProfile", JSON.stringify(profile));
+                        } catch (err) {
+                            console.warn("Firestore update failed:", err);
+                        }
+                    }, 200);
+                });
+            });
+
+            // ── Mobile sidebar overlay ──
+            const overlay = document.getElementById("sidebar-overlay");
+            const sidebar = document.querySelector(".sidebar");
+
+            if (overlay && sidebar) {
+                overlay.addEventListener("click", () => {
+                    sidebar.classList.remove("open");
+                    overlay.classList.remove("show");
+                });
+
+                const observer = new MutationObserver(() => {
+                    if (window.innerWidth <= 768) {
+                        if (sidebar.classList.contains("open")) {
+                            overlay.classList.add("show");
+                        } else {
+                            overlay.classList.remove("show");
+                        }
+                    }
+                });
+                observer.observe(sidebar, { attributes: true, attributeFilter: ["class"] });
+            }
+        });
+    </script>
+
+    <!-- App scripts -->
+    <script src="api.js"></script>
+    <script src="script.js"></script>
+    <script src="profile.js"></script>
+    <script src="temp-chat.js"></script>
+    <script src="library.js"></script>
+    <script src="image.js"></script>
+    <script src="voice.js"></script>
+
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js")
+      .then(() => console.log("✅ SW registered"))
+      .catch(e => console.warn("SW error:", e));
+  });
+}
+</script>
+</body>
+
+</html>

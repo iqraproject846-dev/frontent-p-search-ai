@@ -1,0 +1,400 @@
+<!-- auth.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6c63ff">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="P-Search AI">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512x512.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>P-Search AI — Sign In</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        :root{
+            --bg:#0d0d0d;--surface:#181818;--surface2:#212121;
+            --border:#2a2a2a;--accent:#6c63ff;--text:#f0f0f0;
+            --muted:#777;--error:#ff5f5f;--success:#4caf82;--radius:12px;
+        }
+        body{font-family:Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+        body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(108,99,255,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(108,99,255,0.035) 1px,transparent 1px);background-size:44px 44px;pointer-events:none;z-index:0;}
+
+        /* TOP NAV */
+        .auth-topbar{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;padding:16px 32px;border-bottom:1px solid var(--border);}
+        .auth-topbar-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+        .auth-topbar-logo .logo-snowflake{width:34px;height:34px;background:linear-gradient(135deg,#6c63ff,#a78bfa);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;flex-shrink:0;}
+        .auth-topbar-logo span{font-size:17px;font-weight:700;letter-spacing:-0.3px;color:var(--text);}
+        .back-home-btn{display:inline-flex;align-items:center;gap:7px;background:transparent;border:1px solid var(--border);border-radius:100px;padding:7px 16px;color:var(--muted);font-size:13px;text-decoration:none;cursor:pointer;transition:all 0.2s ease;}
+        .back-home-btn:hover{border-color:#444;color:var(--text);background:rgba(255,255,255,0.04);}
+        .back-home-btn i{font-size:11px;}
+
+        /* MAIN */
+        .auth-body{flex:1;display:flex;align-items:center;justify-content:center;padding:32px 20px;position:relative;z-index:1;}
+        .auth-wrapper{width:100%;max-width:420px;}
+
+        /* Logo */
+        .auth-logo{text-align:center;margin-bottom:24px;}
+        .auth-logo .logo-icon{width:52px;height:52px;background:linear-gradient(135deg,#6c63ff,#a78bfa);border-radius:14px;display:inline-flex;align-items:center;justify-content:center;font-size:22px;color:#fff;margin-bottom:10px;box-shadow:0 8px 24px rgba(108,99,255,0.28);}
+        .auth-logo h1{font-size:22px;font-weight:700;letter-spacing:-0.4px;}
+        .auth-logo p{font-size:13px;color:var(--muted);margin-top:4px;}
+
+        /* Card */
+        .auth-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px 26px;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
+
+        /* Tabs */
+        .auth-tabs{display:flex;background:var(--surface2);border-radius:var(--radius);padding:4px;margin-bottom:22px;gap:4px;}
+        .tab-btn{flex:1;padding:9px;border:none;border-radius:9px;background:transparent;color:var(--muted);font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s ease;}
+        .tab-btn.active{background:var(--surface);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,0.4);}
+
+        /* Forms */
+        .auth-form{display:none;flex-direction:column;gap:14px;}
+        .auth-form.active{display:flex;}
+        .form-group{display:flex;flex-direction:column;gap:6px;}
+        .form-group label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
+
+        /* Input wrapper — FIXED */
+        .input-wrapper{position:relative;}
+        .input-wrapper .icon-left{
+            position:absolute;left:13px;top:50%;transform:translateY(-50%);
+            color:var(--muted);font-size:14px;pointer-events:none;
+            display:flex;align-items:center;justify-content:center;
+        }
+        .input-wrapper input{
+            width:100%;padding:11px 42px 11px 38px;
+            background:var(--surface2);border:1px solid var(--border);
+            border-radius:var(--radius);color:var(--text);font-size:14px;
+            outline:none;transition:border-color 0.2s,box-shadow 0.2s;
+        }
+        .input-wrapper input.no-toggle{padding-right:13px;}
+        .input-wrapper input::placeholder{color:#444;}
+        .input-wrapper input:focus{border-color:#6c63ff;box-shadow:0 0 0 3px rgba(108,99,255,0.12);}
+        .toggle-pass{
+            position:absolute;right:12px;top:50%;transform:translateY(-50%);
+            background:none;border:none;color:var(--muted);cursor:pointer;
+            font-size:13px;padding:4px;transition:color 0.2s;
+            display:flex;align-items:center;justify-content:center;line-height:1;
+        }
+        .toggle-pass:hover{color:var(--text);}
+
+        /* Submit */
+        .auth-submit-btn{width:100%;padding:12px;background:linear-gradient(135deg,#6c63ff,#a78bfa);color:#fff;border:none;border-radius:var(--radius);font-size:15px;font-weight:600;cursor:pointer;transition:opacity 0.2s,transform 0.15s;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;}
+        .auth-submit-btn:hover:not(:disabled){opacity:0.9;transform:translateY(-1px);}
+        .auth-submit-btn:disabled{opacity:0.55;cursor:not-allowed;}
+        .btn-spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;}
+        @keyframes spin{to{transform:rotate(360deg);}}
+
+        /* Alerts */
+        .auth-alert{padding:10px 13px;border-radius:9px;font-size:13px;display:none;align-items:center;gap:8px;}
+        .auth-alert.error{background:rgba(255,95,95,0.1);border:1px solid rgba(255,95,95,0.22);color:var(--error);display:flex;}
+        .auth-alert.success{background:rgba(76,175,130,0.1);border:1px solid rgba(76,175,130,0.22);color:var(--success);display:flex;}
+
+        /* Forgot */
+        .forgot-link{text-align:right;margin-top:-6px;}
+        .forgot-link a{font-size:12px;color:#6c63ff;text-decoration:none;cursor:pointer;}
+        .forgot-link a:hover{text-decoration:underline;}
+
+        /* Password strength */
+        .strength-bar{display:flex;gap:4px;margin-top:4px;}
+        .strength-seg{flex:1;height:3px;background:var(--border);border-radius:3px;transition:background 0.3s;}
+        .strength-seg.weak{background:#ff5f5f;}
+        .strength-seg.medium{background:#f5a623;}
+        .strength-seg.strong{background:#4caf82;}
+        .strength-label{font-size:11px;color:var(--muted);margin-top:3px;}
+
+        /* Loading overlay */
+        #auth-loading{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:9999;align-items:center;justify-content:center;}
+        #auth-loading.show{display:flex;}
+        .big-spinner{width:44px;height:44px;border:3px solid rgba(255,255,255,0.1);border-top-color:#6c63ff;border-radius:50%;animation:spin 0.8s linear infinite;}
+
+        /* Footer */
+        .auth-footer-note{text-align:center;font-size:11px;color:#444;margin-top:18px;line-height:1.6;}
+
+        /* MOBILE */
+        @media(max-width:480px){
+            .auth-topbar{padding:12px 16px;}
+            .auth-topbar-logo span{font-size:15px;}
+            .back-home-btn span{display:none;}
+            .back-home-btn{padding:8px 12px;}
+            .auth-card{padding:20px 16px;}
+            .auth-body{padding:20px 12px;}
+        }
+    </style>
+</head>
+<body>
+
+<div id="auth-loading"><div class="big-spinner"></div></div>
+
+<header class="auth-topbar">
+    <a href="index.html" class="auth-topbar-logo">
+        <div class="logo-snowflake"><i class="fa-solid fa-snowflake"></i></div>
+        <span>P-Search AI</span>
+    </a>
+    <a href="index.html" class="back-home-btn">
+        <i class="fa-solid fa-arrow-left"></i>
+        <span>Back to home</span>
+    </a>
+</header>
+
+<main class="auth-body">
+    <div class="auth-wrapper">
+        <div class="auth-logo">
+            <div class="logo-icon"><i class="fa-solid fa-snowflake"></i></div>
+            <h1>Welcome back</h1>
+            <p>Sign in to continue to P-Search AI</p>
+        </div>
+
+        <div class="auth-card">
+            <div class="auth-tabs">
+                <button class="tab-btn active" data-tab="login">Sign In</button>
+                <button class="tab-btn" data-tab="register">Create Account</button>
+            </div>
+
+            <!-- LOGIN -->
+            <form class="auth-form active" id="login-form" autocomplete="off">
+                <div id="login-alert" class="auth-alert"></div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <div class="input-wrapper">
+                        <span class="icon-left"><i class="fa-solid fa-envelope"></i></span>
+                        <input type="email" id="login-email" class="no-toggle" placeholder="you@example.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-wrapper">
+                        <span class="icon-left"><i class="fa-solid fa-lock"></i></span>
+                        <input type="password" id="login-password" placeholder="Enter password" required>
+                        <button type="button" class="toggle-pass" data-target="login-password">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="forgot-link"><a id="forgot-link">Forgot password?</a></div>
+                <button type="submit" class="auth-submit-btn" id="login-btn"><span>Sign In</span></button>
+            </form>
+
+            <!-- REGISTER -->
+            <form class="auth-form" id="register-form" autocomplete="off">
+                <div id="register-alert" class="auth-alert"></div>
+                <div class="form-group">
+                    <label>Display Name</label>
+                    <div class="input-wrapper">
+                        <span class="icon-left"><i class="fa-solid fa-user"></i></span>
+                        <input type="text" id="reg-name" class="no-toggle" placeholder="Your name" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <div class="input-wrapper">
+                        <span class="icon-left"><i class="fa-solid fa-envelope"></i></span>
+                        <input type="email" id="reg-email" class="no-toggle" placeholder="you@example.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-wrapper">
+                        <span class="icon-left"><i class="fa-solid fa-lock"></i></span>
+                        <input type="password" id="reg-password" placeholder="Min 6 characters" required>
+                        <button type="button" class="toggle-pass" data-target="reg-password">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="strength-bar">
+                        <div class="strength-seg" id="s1"></div>
+                        <div class="strength-seg" id="s2"></div>
+                        <div class="strength-seg" id="s3"></div>
+                        <div class="strength-seg" id="s4"></div>
+                    </div>
+                    <div class="strength-label" id="strength-label"></div>
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <div class="input-wrapper">
+                        <span class="icon-left"><i class="fa-solid fa-lock"></i></span>
+                        <input type="password" id="reg-confirm" placeholder="Repeat password" required>
+                        <button type="button" class="toggle-pass" data-target="reg-confirm">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="auth-submit-btn" id="register-btn"><span>Create Account</span></button>
+            </form>
+        </div>
+
+        <div class="auth-footer-note">
+            By continuing, you agree to P-Search AI Terms of Service.<br>
+            Your data stays private and secure.
+        </div>
+    </div>
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+    getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+    updateProfile, sendPasswordResetEmail, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {
+    getFirestore, doc, setDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const app = initializeApp({
+    apiKey:"AIzaSyB-7Sl0_Yf50ipd_XS85eF-F-0Fc_o6Cr4",
+    authDomain:"p-search-ai.firebaseapp.com",
+    projectId:"p-search-ai",
+    storageBucket:"p-search-ai.firebasestorage.app",
+    messagingSenderId:"511596771451",
+    appId:"1:511596771451:web:bca02c28259967b8de8ade"
+});
+const auth = getAuth(app);
+const db   = getFirestore(app);
+const loading = document.getElementById("auth-loading");
+
+loading.classList.add("show");
+onAuthStateChanged(auth, user => {
+    if (user) { window.location.href = "chatbot.html"; }
+    else { loading.classList.remove("show"); }
+});
+
+/* Tab switching */
+document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".auth-form").forEach(f => f.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.tab + "-form").classList.add("active");
+        clearAlerts();
+    });
+});
+
+/* Password toggle */
+document.querySelectorAll(".toggle-pass").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const input = document.getElementById(btn.dataset.target);
+        const icon  = btn.querySelector("i");
+        if (input.type === "password") { input.type = "text"; icon.classList.replace("fa-eye","fa-eye-slash"); }
+        else { input.type = "password"; icon.classList.replace("fa-eye-slash","fa-eye"); }
+    });
+});
+
+/* Password strength */
+document.getElementById("reg-password").addEventListener("input", function() {
+    const val = this.value;
+    const segs = ["s1","s2","s3","s4"].map(id => document.getElementById(id));
+    const label = document.getElementById("strength-label");
+    segs.forEach(s => s.className = "strength-seg");
+    let score = 0;
+    if (val.length >= 6) score++;
+    if (val.length >= 10) score++;
+    if (/[A-Z]/.test(val) && /[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+    const levels = ["","weak","medium","medium","strong"];
+    const labels = ["","Weak","Fair","Good","Strong 💪"];
+    for (let i = 0; i < score; i++) segs[i].classList.add(levels[score]);
+    label.textContent = val.length ? labels[score] : "";
+});
+
+function showAlert(id, msg, type) {
+    const el = document.getElementById(id);
+    el.className = "auth-alert " + type;
+    el.innerHTML = `<i class="fa-solid ${type==="error"?"fa-circle-exclamation":"fa-circle-check"}"></i> ${msg}`;
+}
+function clearAlerts() {
+    document.querySelectorAll(".auth-alert").forEach(el => { el.className="auth-alert"; el.innerHTML=""; });
+}
+function setLoading(btnId, state) {
+    const btn = document.getElementById(btnId);
+    const span = btn.querySelector("span");
+    let spinner = btn.querySelector(".btn-spinner");
+    if (state) {
+        if (!spinner) { spinner = document.createElement("div"); spinner.className="btn-spinner"; btn.prepend(spinner); }
+        span.style.display="none"; btn.disabled=true;
+    } else {
+        spinner?.remove(); span.style.display=""; btn.disabled=false;
+    }
+}
+function errMsg(code) {
+    const map = {
+        "auth/invalid-email":"Invalid email address.",
+        "auth/user-not-found":"No account with this email.",
+        "auth/wrong-password":"Incorrect password.",
+        "auth/email-already-in-use":"Email already registered.",
+        "auth/weak-password":"Password too weak (min 6 chars).",
+        "auth/too-many-requests":"Too many attempts. Try again later.",
+        "auth/network-request-failed":"Network error. Check connection.",
+        "auth/invalid-credential":"Wrong email or password.",
+    };
+    return map[code] || "Something went wrong. Please try again.";
+}
+
+/* Login */
+document.getElementById("login-form").addEventListener("submit", async e => {
+    e.preventDefault(); clearAlerts();
+    setLoading("login-btn", true);
+    try {
+        await signInWithEmailAndPassword(auth,
+            document.getElementById("login-email").value.trim(),
+            document.getElementById("login-password").value
+        );
+    } catch(err) {
+        setLoading("login-btn", false);
+        showAlert("login-alert", errMsg(err.code), "error");
+    }
+});
+
+/* Register */
+document.getElementById("register-form").addEventListener("submit", async e => {
+    e.preventDefault(); clearAlerts();
+    const name    = document.getElementById("reg-name").value.trim();
+    const email   = document.getElementById("reg-email").value.trim();
+    const pass    = document.getElementById("reg-password").value;
+    const confirm = document.getElementById("reg-confirm").value;
+    if (!name)            return showAlert("register-alert","Please enter your name.","error");
+    if (pass !== confirm) return showAlert("register-alert","Passwords do not match.","error");
+    if (pass.length < 6)  return showAlert("register-alert","Password must be at least 6 characters.","error");
+    setLoading("register-btn", true);
+    try {
+        const cred = await createUserWithEmailAndPassword(auth, email, pass);
+        await updateProfile(cred.user, { displayName: name });
+        await setDoc(doc(db,"users",cred.user.uid), {
+            uid:cred.user.uid, name, email,
+            plan:"Free Plan", bio:"", photo:"",
+            createdAt:serverTimestamp()
+        });
+    } catch(err) {
+        setLoading("register-btn", false);
+        showAlert("register-alert", errMsg(err.code), "error");
+    }
+});
+
+/* Forgot password */
+document.getElementById("forgot-link").addEventListener("click", async () => {
+    const email = document.getElementById("login-email").value.trim();
+    if (!email) return showAlert("login-alert","Enter your email above first.","error");
+    try {
+        await sendPasswordResetEmail(auth, email);
+        showAlert("login-alert","Reset link sent! Check your inbox.","success");
+    } catch(err) {
+        showAlert("login-alert", errMsg(err.code), "error");
+    }
+});
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js")
+      .then(() => console.log("✅ SW registered"))
+      .catch(e => console.warn("SW error:", e));
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,450 @@
+/* ========================================
+   INLINE VOICE CALL UI — FIXED CSS
+   Works inside .input-field without breaking layout
+   ======================================== */
+
+/* When call is active, input-field becomes a column container */
+.input-field.call-active {
+    flex-direction: column !important;
+    height: auto !important;
+    min-height: 90px !important;
+    padding: 10px 15px 8px !important;
+    align-items: stretch !important;
+    border-radius: 18px !important;
+    gap: 6px !important;
+}
+
+/* ---- Main call UI wrapper ---- */
+.inline-call-ui {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    width: 100%;
+    animation: callUIEnter 0.3s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+}
+
+@keyframes callUIEnter {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.call-ui-exit {
+    animation: callUIExit 0.25s ease forwards !important;
+}
+
+@keyframes callUIExit {
+    to { opacity: 0; transform: translateY(6px); }
+}
+
+/* ---- Voice selector bar ---- */
+.call-voice-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.call-voice-label {
+    font-size: 10px;
+    color: #777;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding-top: 15px;
+}
+
+.call-voice-options {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    padding-top: 15px;
+}
+
+.call-voice-chip {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #aaa;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+    line-height: 1.6;
+}
+
+.call-voice-chip:hover {
+    background: rgba(99, 102, 241, 0.18);
+    border-color: rgba(99, 102, 241, 0.35);
+    color: #fff;
+}
+
+.call-voice-chip.active {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+}
+
+/* ---- Main controls row ---- */
+.call-status-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+/* ---- Orb ---- */
+.call-orb-wrap {
+    flex-shrink: 0;
+}
+
+.call-orb {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 14px rgba(99, 102, 241, 0.45);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    flex-shrink: 0;
+}
+
+.call-orb-inner {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.75);
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+}
+
+.call-orb.listening {
+    background: linear-gradient(135deg, #10b981, #059669);
+    animation: orbPulse 1.3s ease-in-out infinite;
+    box-shadow: 0 0 14px rgba(16, 185, 129, 0.5);
+}
+
+@keyframes orbPulse {
+    0%   { transform: scale(1);    box-shadow: 0 0 0 0 rgba(16,185,129,0.55); }
+    50%  { transform: scale(1.1);  box-shadow: 0 0 0 9px rgba(16,185,129,0);  }
+    100% { transform: scale(1);    box-shadow: 0 0 0 0 rgba(16,185,129,0);    }
+}
+
+.call-orb.speaking {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    animation: orbSpeak 0.55s ease-in-out infinite;
+    box-shadow: 0 0 16px rgba(245, 158, 11, 0.55);
+}
+
+@keyframes orbSpeak {
+    0%, 100% { transform: scale(1); }
+    50%       { transform: scale(1.12); }
+}
+
+.call-orb.thinking {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    animation: orbThink 1s ease-in-out infinite;
+    box-shadow: 0 0 16px rgba(59, 130, 246, 0.55);
+}
+
+@keyframes orbThink {
+    0%, 100% { opacity: 1;   transform: scale(1);    }
+    50%       { opacity: 0.6; transform: scale(0.92); }
+}
+
+/* ---- Status text ---- */
+.call-status-text {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.call-live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #10b981;
+    flex-shrink: 0;
+    animation: dotBlink 1.5s ease-in-out infinite;
+}
+
+@keyframes dotBlink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.25; }
+}
+
+#call-status-label {
+    font-size: 12px;
+    color: #ccc;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ---- Control buttons ---- */
+.call-controls {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-shrink: 0;
+}
+
+.call-ctrl-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    font-size: 13px;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.09);
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.call-ctrl-btn:hover  { transform: scale(1.1); }
+.call-ctrl-btn:active { transform: scale(0.93); }
+
+.call-mute-btn { background: rgba(16, 185, 129, 0.14); color: #34d399; }
+.call-mute-btn:hover { background: rgba(16, 185, 129, 0.26); }
+.call-mute-btn.muted { background: rgba(239, 68, 68, 0.14); color: #f87171; }
+
+.call-mic-btn { background: rgba(99, 102, 241, 0.18); color: #818cf8; }
+.call-mic-btn.active {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff;
+    box-shadow: 0 2px 10px rgba(16, 185, 129, 0.45);
+    animation: micPulse 2s ease-in-out infinite;
+}
+@keyframes micPulse {
+    0%, 100% { box-shadow: 0 2px 10px rgba(16,185,129,0.4); }
+    50%       { box-shadow: 0 2px 18px rgba(16,185,129,0.7); }
+}
+.call-mic-btn:hover { background: rgba(99, 102, 241, 0.3); }
+
+.call-end-btn {
+    width: auto !important;
+    border-radius: 20px !important;
+    padding: 0 14px !important;
+    height: 36px !important;
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    color: #fff !important;
+    font-size: 12px !important;
+    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(239, 68, 68, 0.35);
+    gap: 5px !important;
+}
+.call-end-btn:hover {
+    background: linear-gradient(135deg, #f87171, #ef4444) !important;
+    box-shadow: 0 3px 14px rgba(239, 68, 68, 0.5);
+    transform: scale(1.04) !important;
+}
+.call-end-btn i    { font-size: 12px; }
+.call-end-btn span { font-size: 12px; font-weight: 600; }
+
+/* ---- Transcript ---- */
+.call-transcript {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.38);
+    font-style: italic;
+    min-height: 14px;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-bottom: 10px;
+}
+
+/* ---- Input field position when call is active ---- */
+.input-field.call-active,
+.input-fixed-bottom.call-active {
+    position: fixed !important;
+    bottom: 355px !important;
+    left: 63% !important;
+    transform: translateX(-60%) !important;
+    z-index: 1000 !important;
+}
+
+/* ---- Attach button ---- */
+.call-attach-btn {
+    background: rgba(99, 102, 241, 0.15);
+    color: #818cf8;
+}
+.call-attach-btn:hover {
+    background: rgba(99, 102, 241, 0.3);
+    color: #fff;
+}
+.call-attach-btn.has-files {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff;
+    box-shadow: 0 2px 10px rgba(99,102,241,0.45);
+}
+
+/* ---- File preview — matches normal .file-preview-bar style ---- */
+.call-file-preview {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    width: 720px;
+    background: #0f0f0f;
+    border-radius: 12px;
+    border: 1px solid #222;
+    padding: 10px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.25s ease;
+    z-index: 999;
+}
+
+.call-file-preview.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+}
+
+/* ---- File chip — matches normal .file-chip style ---- */
+.call-file-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #1e1e1e;
+    padding: 6px 10px;
+    border-radius: 14px;
+    font-size: 13px;
+    color: #fff;
+    animation: chipIn 0.2s ease both;
+}
+
+@keyframes chipIn {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+.call-file-thumb {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.call-file-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.call-file-thumb i {
+    font-size: 13px;
+    color: #818cf8;
+}
+
+.call-file-name {
+    font-size: 13px;
+    color: #fff;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.call-file-remove {
+    background: none;
+    border: none;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    padding: 0;
+    flex-shrink: 0;
+}
+.call-file-remove:hover { color: #ef4444; }
+
+/* ---- Responsive ---- */
+/* ---- Mobile voice call fixes ---- */
+@media (max-width: 768px) {
+
+    /* Voice chips — horizontally scrollable, no wrap */
+    .call-voice-bar {
+        gap: 5px;
+        flex-wrap: nowrap;
+    }
+    .call-voice-label {
+        display: none;   /* saves space */
+    }
+    .call-voice-options {
+        display: flex;
+        gap: 5px;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        padding-top: 10px;
+    }
+    .call-voice-options::-webkit-scrollbar { display: none; }
+    .call-voice-chip {
+        font-size: 10px;
+        padding: 2px 8px;
+        flex-shrink: 0;   /* prevent chips from squishing */
+    }
+
+    /* End call — icon only, no text */
+    .call-end-btn span { display: none; }
+    .call-end-btn {
+        width: 36px !important;
+        border-radius: 50% !important;
+        padding: 0 !important;
+        justify-content: center;
+    }
+
+    /* Controls — don't overflow */
+    .call-controls {
+        gap: 5px;
+        flex-shrink: 0;
+    }
+    .call-ctrl-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+    }
+
+    /* Fix position — mobile ke liye bottom sahi set karo */
+    .input-field.call-active,
+    .input-fixed-bottom.call-active {
+        bottom: 10px !important;   /* ← yeh line change karo (was 355px) */
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: calc(100vw - 20px) !important;
+    }
+
+    /* File preview — call ke waqt */
+    .call-file-preview {
+        width: calc(100vw - 20px) !important;
+        bottom: 160px;
+    }
+}
+
+@media (max-width: 480px) {
+    .call-orb { width: 30px; height: 30px; }
+    .call-orb-inner { width: 12px; height: 12px; }
+    #call-status-label { font-size: 10px; }
+}

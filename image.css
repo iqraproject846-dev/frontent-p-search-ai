@@ -1,0 +1,346 @@
+/* ==========================================
+   IMAGE PREVIEW POPUP STYLES
+========================================== */
+
+/* Overlay */
+.image-preview-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.image-preview-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Preview Container */
+.image-preview-container {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.image-preview-overlay.show .image-preview-container {
+    transform: scale(1);
+}
+
+/* Image Wrapper */
+.image-preview-wrapper {
+    position: relative;
+    max-width: 90vw;
+    max-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Preview Image */
+.image-preview-img {
+    max-width: 100%;
+    max-height: 80vh;
+    width: auto;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    object-fit: contain;
+    cursor: zoom-in;
+    transition: transform 0.3s ease;
+}
+
+.image-preview-img.zoomed {
+    cursor: zoom-out;
+    transform: scale(1.5);
+}
+
+/* Close Button */
+.image-preview-close {
+    position: absolute;
+    top: -50px;
+    right: 0;
+    width: 45px;
+    height: 45px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.image-preview-close:hover {
+    background: rgba(255, 77, 77, 0.9);
+    border-color: #ff4d4d;
+    transform: rotate(90deg) scale(1.1);
+}
+
+/* Image Info Bar */
+.image-preview-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.image-preview-name {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Action Buttons */
+.image-preview-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.image-preview-action-btn {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.image-preview-action-btn:hover {
+    background: rgba(59, 130, 246, 0.9);
+    border-color: #3b82f6;
+    transform: scale(1.1);
+}
+
+.image-preview-action-btn.download:hover {
+    background: rgba(16, 185, 129, 0.9);
+    border-color: #10b981;
+}
+
+.image-preview-action-btn.zoom:hover {
+    background: rgba(245, 158, 11, 0.9);
+    border-color: #f59e0b;
+}
+
+/* Navigation Arrows (for future multi-image support) */
+.image-preview-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.image-preview-nav:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.image-preview-nav.prev {
+    left: 20px;
+}
+
+.image-preview-nav.next {
+    right: 20px;
+}
+
+.image-preview-nav.disabled {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+/* Loading State */
+.image-preview-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .image-preview-img {
+        max-height: 70vh;
+    }
+    
+    .image-preview-close {
+        top: -40px;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+    
+    .image-preview-info {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px 15px;
+    }
+    
+    .image-preview-name {
+        max-width: 200px;
+        font-size: 13px;
+    }
+    
+    .image-preview-action-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+    
+    .image-preview-nav {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .image-preview-nav.prev {
+        left: 10px;
+    }
+    
+    .image-preview-nav.next {
+        right: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .image-preview-container {
+        max-width: 95vw;
+    }
+    
+    .image-preview-img {
+        max-height: 65vh;
+        border-radius: 8px;
+    }
+    
+    .image-preview-close {
+        top: -35px;
+        width: 35px;
+        height: 35px;
+        font-size: 18px;
+    }
+    
+    .image-preview-info {
+        padding: 8px 12px;
+    }
+    
+    .image-preview-name {
+        font-size: 12px;
+        max-width: 150px;
+    }
+    
+    .image-preview-action-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 13px;
+    }
+}
+
+/* Light Mode Support */
+body.light-mode .image-preview-overlay {
+    background: rgba(255, 255, 255, 0.98);
+}
+
+body.light-mode .image-preview-close,
+body.light-mode .image-preview-action-btn,
+body.light-mode .image-preview-nav {
+    background: rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 0, 0, 0.3);
+    color: #1a1a1a;
+}
+
+body.light-mode .image-preview-close:hover {
+    background: rgba(255, 77, 77, 0.9);
+    border-color: #ff4d4d;
+    color: #fff;
+}
+
+body.light-mode .image-preview-action-btn:hover {
+    color: #fff;
+}
+
+body.light-mode .image-preview-info {
+    background: rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+body.light-mode .image-preview-name {
+    color: #1a1a1a;
+}
+
+body.light-mode .image-preview-loading {
+    color: #1a1a1a;
+}
+
+/* Animation for image entrance */
+@keyframes imageZoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.image-preview-wrapper .image-preview-img {
+    animation: imageZoomIn 0.3s ease;
+}

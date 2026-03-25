@@ -1,0 +1,498 @@
+/* ==========================================
+    TEMPORARY CHAT STYLES
+========================================== */
+
+/* ==========================================
+    TEMP CHAT POP-UP NOTIFICATION
+========================================== */
+
+.temp-chat-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.temp-chat-popup-overlay.show {
+    opacity: 1;
+}
+
+.temp-chat-popup {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    border-radius: 20px;
+    padding: 35px 30px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    border: 1px solid #3f3f3f;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.temp-chat-popup-overlay.show .temp-chat-popup {
+    transform: scale(1);
+}
+
+.temp-chat-popup-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    animation: pulse-icon 2s infinite;
+}
+
+.temp-chat-popup-icon i {
+    font-size: 35px;
+    color: #fff;
+}
+
+@keyframes pulse-icon {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 0 20px rgba(245, 158, 11, 0);
+    }
+}
+
+.temp-chat-popup h2 {
+    text-align: center;
+    color: #fff;
+    font-size: 24px;
+    margin: 0 0 10px 0;
+    font-weight: 600;
+}
+
+.temp-chat-popup-desc {
+    text-align: center;
+    color: #aaa;
+    font-size: 14px;
+    margin: 0 0 30px 0;
+}
+
+/* Time Display Container */
+.temp-chat-time-display {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: rgba(245, 158, 11, 0.1);
+    border-radius: 12px;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.time-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: #2a2a2a;
+    border-radius: 10px;
+    border: 1px solid #3f3f3f;
+}
+
+.time-box i {
+    font-size: 24px;
+    color: #10b981;
+}
+
+.time-box.end-time i {
+    color: #ef4444;
+}
+
+.time-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    width: 100%;
+}
+
+.time-label {
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.time-value {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.time-date {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.time-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    color: #f59e0b;
+}
+
+.time-arrow i {
+    font-size: 20px;
+}
+
+.duration-label {
+    font-size: 11px;
+    color: #f59e0b;
+    font-weight: bold;
+}
+
+/* Warning Box */
+.temp-chat-popup-warning {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.temp-chat-popup-warning i {
+    color: #ef4444;
+    font-size: 18px;
+}
+
+.temp-chat-popup-warning span {
+    color: #ef4444;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* Buttons Container */
+.temp-chat-popup-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.temp-chat-cancel-btn,
+.temp-chat-start-btn {
+    flex: 1;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.temp-chat-cancel-btn {
+    background: #2a2a2a;
+    color: #aaa;
+    border: 1px solid #444;
+}
+
+.temp-chat-cancel-btn:hover {
+    background: #333;
+    color: #fff;
+}
+
+.temp-chat-start-btn {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: #fff;
+}
+
+.temp-chat-start-btn:hover {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
+}
+
+/* Light Mode Popup */
+body.light-mode .temp-chat-popup {
+    background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+    border: 1px solid #e0e0e0;
+}
+
+body.light-mode .temp-chat-popup h2 {
+    color: #1a1a1a;
+}
+
+body.light-mode .temp-chat-popup-desc {
+    color: #666;
+}
+
+body.light-mode .temp-chat-time-display {
+    background: rgba(245, 158, 11, 0.15);
+    border-color: rgba(245, 158, 11, 0.4);
+}
+
+body.light-mode .time-box {
+    background: #ffffff;
+    border-color: #e0e0e0;
+}
+
+body.light-mode .time-value {
+    color: #1a1a1a;
+}
+
+body.light-mode .time-date {
+    color: #666;
+}
+
+body.light-mode .temp-chat-popup-warning {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.4);
+}
+
+body.light-mode .temp-chat-cancel-btn {
+    background: #f5f5f5;
+    color: #666;
+    border-color: #e0e0e0;
+}
+
+body.light-mode .temp-chat-cancel-btn:hover {
+    background: #e0e0e0;
+    color: #1a1a1a;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .temp-chat-popup {
+        padding: 25px 20px;
+        max-width: 95%;
+    }
+    
+    .temp-chat-popup h2 {
+        font-size: 20px;
+    }
+    
+    .temp-chat-time-display {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .time-arrow {
+        transform: rotate(90deg);
+    }
+    
+    .time-box {
+        width: 100%;
+    }
+    
+    .temp-chat-popup-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .temp-chat-popup-icon i {
+        font-size: 28px;
+    }
+
+    .temp-chat-popup-buttons {
+        flex-direction: column;
+    }
+}
+
+/* ==========================================
+   ORIGINAL TEMP CHAT STYLES
+========================================== */
+
+/* Temp Chat Button Active State */
+.temp-chat-btn.active-temp {
+    background-color: #f59e0b !important;
+    color: #fff !important;
+    animation: pulse-temp 2s infinite;
+}
+
+@keyframes pulse-temp {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(245, 158, 11, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 15px rgba(245, 158, 11, 0.6);
+    }
+}
+
+/* Temp Chat Icon in Chat List */
+.temp-chat-icon {
+    color: #f59e0b;
+    font-size: 14px;
+    margin-left: 5px;
+    animation: blink-temp 2s infinite;
+}
+
+@keyframes blink-temp {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Temp Chat Info in Dropdown */
+.temp-chat-info {
+    padding: 8px 16px;
+    font-size: 12px;
+    color: #f59e0b;
+    border-bottom: 1px solid #3f3f3f;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.temp-chat-info i {
+    animation: tick-temp 1s infinite;
+}
+
+@keyframes tick-temp {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(-10deg);
+    }
+    75% {
+        transform: rotate(10deg);
+    }
+}
+
+/* Temporary Chat Badge in Header */
+.temp-chat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(245, 158, 11, 0.2);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    color: #f59e0b;
+    margin-left: 10px;
+}
+
+/* Expiry Warning (when < 1 hour left) */
+.temp-chat-expiring {
+    color: #ff4d4d !important;
+}
+
+.temp-chat-expiring .temp-chat-icon {
+    color: #ff4d4d !important;
+    animation: blink-urgent 0.5s infinite;
+}
+
+@keyframes blink-urgent {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.3;
+    }
+}
+
+/* Light Mode Temp Chat Styles */
+body.light-mode .temp-chat-icon {
+    color: #d97706;
+}
+
+body.light-mode .temp-chat-info {
+    color: #d97706;
+    background: rgba(217, 119, 6, 0.1);
+}
+
+body.light-mode .temp-chat-badge {
+    background: rgba(217, 119, 6, 0.2);
+    color: #d97706;
+}
+
+body.light-mode .temp-chat-expiring .temp-chat-icon {
+    color: #dc2626 !important;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .temp-chat-icon {
+        font-size: 12px;
+    }
+    
+    .temp-chat-badge {
+        font-size: 11px;
+        padding: 3px 8px;
+    }
+}
+
+
+/* ==========================================
+    CSS STYLES FOR BUTTONS (add to temp-chat.css)
+========================================== */
+
+
+
+
+.temp-chat-popup-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.temp-chat-cancel-btn,
+.temp-chat-start-btn {
+    flex: 1;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.temp-chat-cancel-btn {
+    background: #2a2a2a;
+    color: #aaa;
+    border: 1px solid #444;
+}
+
+.temp-chat-cancel-btn:hover {
+    background: #333;
+    color: #fff;
+}
+
+.temp-chat-start-btn {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: #fff;
+}
+
+.temp-chat-start-btn:hover {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
+}
+
+body.light-mode .temp-chat-cancel-btn {
+    background: #f5f5f5;
+    color: #666;
+    border-color: #e0e0e0;
+}
+
+body.light-mode .temp-chat-cancel-btn:hover {
+    background: #e0e0e0;
+    color: #1a1a1a;
+}
