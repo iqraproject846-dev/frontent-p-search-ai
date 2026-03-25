@@ -481,7 +481,7 @@ body.light-mode .barBtn-appname .barBtn svg {
     justify-content: flex-start;
     align-items: flex-end;
     padding: 8px 15px;
-    border: 2px solid #555555;
+    border: 2px solid #09c10c;
     transition: border-color 0.35s ease, width 0.35s ease;
     overflow: hidden;
 }
