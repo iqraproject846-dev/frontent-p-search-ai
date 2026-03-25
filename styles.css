@@ -467,7 +467,7 @@ body.light-mode .barBtn-appname .barBtn svg {
 .input-field{
     position: absolute;
     top: 250px;
-    left: 63%;
+    left: 60%;
     transform: translateX(-50%);
     width: min(720px, calc(100vw - var(--sidebar-open) - 40px)) !important;
     min-height: 55px;
